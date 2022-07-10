@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useQuery } from "react-query";
 
-const useUserData = (userId: string) => {
+const useUserData = (userId) => {
   const getUsers = () =>
     axios.get(`/api/users/${userId}`).then((res) => res.data);
 
