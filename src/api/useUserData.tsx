@@ -5,7 +5,9 @@ const useUserData = (userId: string) => {
   const getUsers = () =>
     axios.get(`/api/users/${userId}`).then((res) => res.data);
 
-  return useQuery(["users", userId], getUsers);
+  return useQuery(["users", userId], getUsers, {
+    enabled: !!userId,
+  });
 };
 
 export default useUserData;
