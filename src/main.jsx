@@ -1,12 +1,13 @@
-import { worker } from "@uidotdev/react-query-api";
 import React from "react";
 import ReactDOM from "react-dom";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter } from "react-router-dom";
-import App from "./App";
 import "./index.css";
+import App from "./App";
+import { BrowserRouter } from "react-router-dom";
+import { worker } from "@uidotdev/react-query-api";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
 
-const client = new QueryClient();
+const queryClient = new QueryClient();
 
 new Promise((res) => setTimeout(res, 100))
   .then(() =>
@@ -18,12 +19,13 @@ new Promise((res) => setTimeout(res, 100))
   .then(() => {
     ReactDOM.render(
       <React.StrictMode>
-        <QueryClientProvider client={client}>
+        <QueryClientProvider client={queryClient}>
           <BrowserRouter>
             <div className="container">
               <App />
             </div>
           </BrowserRouter>
+          <ReactQueryDevtools />
         </QueryClientProvider>
       </React.StrictMode>,
       document.getElementById("root")

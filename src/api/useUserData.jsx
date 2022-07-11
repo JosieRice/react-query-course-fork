@@ -7,6 +7,7 @@ const useUserData = (userId) => {
 
   return useQuery(["users", userId], getUsers, {
     enabled: !!userId,
+    staleTime: 1000 * 60 * 5,
   });
 };
 
