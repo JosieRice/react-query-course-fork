@@ -47,6 +47,8 @@ export default function IssuesList({ labels, status }) {
       <h2>Issues List</h2>
       {issuesQuery.isLoading ? (
         <p>Loading...</p>
+      ) : issuesQuery.isError ? (
+        <p>{issuesQuery.error.message}</p>
       ) : searchQuery.fetchStatus === "idle" &&
         searchQuery.isLoading === true ? (
         <ul className="issues-list">
