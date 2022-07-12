@@ -7,13 +7,16 @@ import useSearch from "../api/useSearch";
 export default function IssuesList({ labels, status }) {
   const [searchValue, setSearchValue] = useState("");
 
-  const issuesQuery = useQuery(["issues", { labels, status }], () => {
-    const statusString = status ? `&status=${status}` : "";
-    const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
-    return axios
-      .get(`/api/issues?${labelsString}${statusString}`)
-      .then((res) => res.data);
-  });
+  const issuesQuery = useQuery(
+    ["issues", { labels, status }],
+    async ({ signal }) => {
+      const statusString = status ? `&status=${status}` : "";
+      const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
+      return axios
+        .get(`/api/issues?${labelsString}${statusString}`, { signal })
+        .then((res) => res.data);
+    }
+  );
 
   const searchQuery = useSearch(searchValue);
 
