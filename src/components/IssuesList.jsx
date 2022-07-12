@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { IssueItem } from "./IssueItem";
 import { useState } from "react";
 import useSearch from "../api/useSearch";
@@ -7,15 +7,24 @@ import Loader from "./Loader";
 
 export default function IssuesList({ labels, status }) {
   const [searchValue, setSearchValue] = useState("");
+  const queryClient = useQueryClient();
 
   const issuesQuery = useQuery(
     ["issues", { labels, status }],
     async ({ signal }) => {
       const statusString = status ? `&status=${status}` : "";
       const labelsString = labels.map((label) => `labels[]=${label}`).join("&");
-      return axios
-        .get(`/api/issues?${labelsString}${statusString}`, { signal })
+      const results = await axios
+        .get(`/api/issues?${labelsString}${statusString}`, {
+          signal,
+        })
         .then((res) => res.data);
+
+      results.forEach((issue) => {
+        queryClient.setQueryData(["issues", issue.number.toString()], issue);
+      });
+
+      return results;
     }
   );
 

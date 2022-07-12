@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { relativeDate } from "../helpers/relativeDate";
 import useUserData from "../api/useUserData";
 import { Label } from "./Label";
+import { useQueryClient } from "react-query";
+import axios from "axios";
 
 export function IssueItem({ issue }) {
   const {
@@ -23,8 +25,22 @@ export function IssueItem({ issue }) {
   const { data: createdByUser, isSuccess: createdByUserIsSuccess } =
     useUserData(createdBy);
 
+  const queryClient = useQueryClient();
+
   return (
-    <li>
+    <li
+      onMouseEnter={() => {
+        queryClient.prefetchQuery(["issues", number.toString()], () =>
+          axios.get(`/api/issues/${number}`).then((res) => res.data)
+        );
+
+        queryClient.prefetchQuery(
+          ["issues", number.toString(), "comments"],
+          () =>
+            axios.get(`/api/issues/${number}/comments`).then((res) => res.data)
+        );
+      }}
+    >
       <div>
         {status === "done" || status === "cancelled" ? (
           <GoIssueClosed style={{ color: "red" }} />
